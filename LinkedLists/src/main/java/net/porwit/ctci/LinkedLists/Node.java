@@ -21,10 +21,11 @@ class Node<E> {
 
     public boolean contains(E data) {
         Node<E> runner = this;
-        while(this.next != null) {
-            if(data.equals(this.data)) {
+        while(runner != null) {
+            if(data.equals(runner.data)) {
                 return true;
             }
+            runner = runner.next;
         }
         return false;
     }
