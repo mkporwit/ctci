@@ -159,4 +159,100 @@ public class NodeTest {
         runner = runner.next;
         assertEquals("end of the line", null, runner);
     }
+    
+    @Test
+    public void sumTest() {
+    	Node<Integer> d1 = new Node<Integer>(new Integer(7));
+    	d1 = d1.append(new Node<Integer>(new Integer(1)));
+    	d1 = d1.append(new Node<Integer>(new Integer(6)));
+    	Node<Integer> d2 = new Node<Integer>(new Integer(5));
+    	d2 = d2.append(new Node<Integer>(new Integer(9)));
+    	d2 = d2.append(new Node<Integer>(new Integer(2)));
+    	Node<Integer> result = Node.sum(d1, d2);
+    	assertNotNull(result);
+    	// Verify order
+    	Node<Integer> runner = result;
+    	assertEquals("first node is 2", 2, runner.data.intValue());
+    	runner = runner.next;
+    	assertEquals("second node is 1", 1, runner.data.intValue());
+    	runner = runner.next;
+    	assertEquals("third node is 9", 9, runner.data.intValue());
+    	Node<Integer> d3 = new Node<Integer>(new Integer(5));
+    	d3 = d3.append(new Node<Integer>(new Integer(9)));
+    	d3 = d3.append(new Node<Integer>(new Integer(5)));
+    	result = Node.sum(d1, d3);
+    	// Verify order
+    	runner = result;
+    	assertEquals("first node is 2", 2, runner.data.intValue());
+    	runner = runner.next;
+    	assertEquals("second node is 1", 1, runner.data.intValue());
+    	runner = runner.next;
+    	assertEquals("third node is 2", 2, runner.data.intValue());
+    	runner = runner.next;
+    	assertEquals("fourth node is 1", 1, runner.data.intValue());
+     }
+    
+    @Test
+    public void palindromeTest() {
+    	Node<String> list = new Node<String>("t");
+    	list = list.append(new Node<String>("a"));
+    	list = list.append(new Node<String>("c"));
+    	list = list.append(new Node<String>("o"));
+    	list = list.append(new Node<String>("c"));
+    	list = list.append(new Node<String>("a"));
+    	list = list.append(new Node<String>("t"));
+    	assertTrue("tacocat is a palindrome", list.isPalindrome());
+    	list = new Node<String>("t");
+    	list = list.append(new Node<String>("a"));
+    	list = list.append(new Node<String>("c"));
+    	list = list.append(new Node<String>("o"));
+    	list = list.append(new Node<String>("b"));
+    	list = list.append(new Node<String>("a"));
+    	list = list.append(new Node<String>("t"));
+    	assertFalse("tacobat is not a palindrome", list.isPalindrome());
+    	list = new Node<String>("t");
+    	assertTrue("t is a palindrome", list.isPalindrome());
+    	list = new Node<String>("t");
+    	list = list.append(new Node<String>("t"));
+    	assertTrue("tt is a palindrome", list.isPalindrome());
+    }
+    
+    @Test
+    public void intersectionTest() {
+    	Node<String> l1 = new Node<String>("aa");
+    	l1 = l1.append(new Node<String>("bb"));
+    	l1 = l1.append(new Node<String>("cc"));
+    	l1 = l1.append(new Node<String>("dd"));
+    	l1 = l1.append(new Node<String>("ee"));
+    	Node<String> l2 = new Node<String>("zz");
+    	l2 = l2.append(new Node<String>("yy"));
+    	l2 = l2.append(new Node<String>("xx"));
+    	assertNull("no intersecting nodes", l1.intersection(l1, l2));
+    	Node<String> iNode = new Node<String>("oo");
+    	l1 = l1.append(iNode);
+    	l2 = l2.append(iNode);
+    	Node<String> ret = l1.intersection(l1, l2);
+    	assertNotNull("found an intersecting node", ret);
+    	assertEquals("refers to the same node", iNode, ret);
+    	Node<String> someNode = new Node<String>("pp");
+    	l1 = l1.append(someNode);
+    	ret = l1.intersection(l1, l2);
+    	assertNotNull("found an intersecting node", ret);
+    	assertEquals("refers to the first intersecting node", iNode, ret);
+    }
+    @Test
+    public void detectLoopTest() {
+    	Node<String> list = new Node<String>("a");
+    	list = list.append(new Node<String>("b"));
+    	list = list.append(new Node<String>("c"));
+    	list = list.append(new Node<String>("d"));
+    	list = list.append(new Node<String>("e"));
+    	Node<String> circ = new Node<String>("f");
+    	circ.next = list.next.next;
+    	list = list.append(circ);
+    	Node<String> ret = list.detectLoop();
+    	assertNotNull(ret);
+    	assertEquals("first looping node", list.next.next, ret);
+    	
+    }
 }

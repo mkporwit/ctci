@@ -118,4 +118,117 @@ class Node<E extends Comparable<E>> {
     	}
     	return leftPart.append(middlePart.append(rightPart));
     }
+    
+    public static Node<Integer> sum(Node<Integer> d1, Node<Integer> d2) {
+    	Node<Integer> result = null, d1runner, d2runner;
+    	
+    	d1runner = d1;
+    	d2runner = d2;
+    	int carry = 0;
+    	while (d1runner != null && d2runner != null) {
+    		int r = d1runner.data.intValue() + d2runner.data.intValue() + carry;
+    		carry = r/10;
+    		r = r % 10;
+    		d1runner = d1runner.next;
+    		d2runner = d2runner.next;
+    		Node<Integer> n = new Node<Integer>(new Integer(r));
+    		if(result == null) {
+    			result = n;
+    		} else {
+    			result = result.append(n);
+    		}
+    	}
+    	
+    	if(carry != 0) {
+    		Node<Integer> n = new Node<Integer>(new Integer(carry));
+    		result = result.append(n);
+    	}
+    	
+    	return result;
+    }
+
+	public boolean isPalindrome() {
+		int ind = 0;
+		Node<E> runner = this;
+		Node<E> backRunner = null;
+		boolean isPalindrome = true;
+		while(runner != null)
+		{
+			backRunner = this.getKthToLast(ind);
+			if(runner.data.compareTo(backRunner.data) != 0) {
+				isPalindrome = false;
+				break;
+			}
+			runner = runner.next;
+			ind++;
+			if(backRunner == this) {
+				break;
+			}
+		}
+		
+		return isPalindrome;
+	}
+	
+	public Node<E> intersection(Node<E> l1, Node<E> l2) {
+		Node<E> intersect = null, l1runner = l1, l2runner = l2;
+		// get length of both lists
+		int len1 = 0, len2 = 0;
+		while(l1runner != null && l1runner.next != null) {
+			l1runner = l1runner.next;
+			len1++;
+		}
+		while(l2runner != null && l2runner.next != null) {
+			l2runner = l2runner.next;
+			len2++;
+		}
+		// at end of both lists -- see if that's the same spot
+		if(l2runner == l1runner) {
+			// both lists ended with the same node
+			l1runner = l1;
+			l2runner = l2;
+			// check if one list is longer than the other and adjust runners
+			if(len1 > len2) {
+				for(int i = 0; i < len1 - len2; i++) {
+					l1runner = l1runner.next;
+				}
+			} else if(len2 > len1) {
+				for(int i = 0; i < len2 - len1; i++) {
+					l2runner = l2runner.next;
+				}
+			}
+			// both runners should now be equidistant from end
+			while(l1runner != null && l2runner != null) {
+				if(l1runner == l2runner) {
+					intersect = l1runner;
+					break;
+				} else {
+					l1runner = l1runner.next;
+					l2runner = l2runner.next;
+				}
+			}
+		}
+		return intersect;
+	}
+
+	public Node<E> detectLoop() {
+		Node<E> slow = this;
+		Node<E> fast = this;
+		while(fast != null && fast.next != null) {
+			slow = slow.next;
+			fast = fast.next.next;
+			if(slow == fast) {
+				break;
+			}
+		}
+		slow = this;
+		while(slow != null) {
+			if(slow == fast) {
+				break;
+			} else {
+				slow = slow.next;
+				fast = fast.next;
+			}
+		}
+		return slow;
+	}
 }
