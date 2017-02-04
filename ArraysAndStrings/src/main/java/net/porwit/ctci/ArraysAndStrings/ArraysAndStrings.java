@@ -1,6 +1,7 @@
 package net.porwit.ctci.ArraysAndStrings;
 
 import java.util.HashSet;
+import java.text.StringCharacterIterator;
 import java.util.Arrays;
 
 class ArraysAndStrings {
@@ -75,11 +76,14 @@ class ArraysAndStrings {
 	}
 
 	public static boolean palindromePermutation(String s) {
-		char[] chars = s.toCharArray();
+		char[] chars = s.toLowerCase().toCharArray();
 		Arrays.sort(chars);
 		boolean ret = false;
 		boolean oddPivot = false;
 		for(int i = 0; i < chars.length; i++) {
+			if(chars[i] < 'a' || chars[i] > 'z') {
+				continue;
+			}
 			if(chars[i] == chars[i+1]) {
 				i++;
 				ret = true;
@@ -95,6 +99,38 @@ class ArraysAndStrings {
 				}
 			}
 		}
+		return ret;
+	}
+
+	public static boolean oneAway(String s1, String s2) {
+		int numChanges = 0;
+		boolean ret = false;
+
+		StringCharacterIterator sci1 = new StringCharacterIterator(s1);
+		StringCharacterIterator sci2 = new StringCharacterIterator(s2);
+		char c1 = sci1.first();
+		char c2 = sci2.first();
+		for(; numChanges < 2; c1 = sci1.next(), c2 = sci2.next()) {
+			if(c1 == StringCharacterIterator.DONE && c2 == StringCharacterIterator.DONE) {
+				break;
+			}
+			if(c1 != c2) {
+				numChanges++;
+				// If strings are of unequal lengths, assume this is a deletion or insertion and advance the longer one
+				if(s1.length() > s2.length()) {
+					c1 = sci1.next();
+				} else if (s1.length() < s2.length()) {
+					c2 = sci2.next();
+				} else {
+					// Strings are of equal length, so assume this is a substitution
+					c1 = sci1.next();
+					c2 = sci2.next();
+				}
+			} 
+		}
+		if(numChanges == 1) 
+			ret = true;
+		
 		return ret;
 	}
 }
